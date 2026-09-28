@@ -1,0 +1,146 @@
+
+/*Nút trên thanh Menu*/
+#tenrap{
+    color: #00E5FF;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.canhgiua
+{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+.gachduoiLink
+{
+
+    display: flex;
+    gap: 40px;
+    margin-top: 10px;
+}
+.gachduoiLink a
+{
+    
+    color: black;
+    font-size: 45;
+    text-decoration: none;
+    border-bottom: 3px solid #00E5FF;
+    padding-bottom: 5px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    
+}
+.gachduoiLink a:hover {
+    color: #00E5FF;
+}
+.duong-ngan-cach {
+    border: none;                  
+    height: 3px;                  
+    background-color: #125c64;     
+    margin-top: 20px;          
+}
+.khungNoisong
+{
+    font-size: 15px;          
+    padding: 10px 10px;       
+    font-weight: bold;        
+    border-radius: 8px;      
+    background-color: #ffffff;
+    color:black  ;         
+    cursor: pointer;         
+
+}
+.nhom-tai-khoan
+{
+    display: flex;
+    gap: 30px;
+    margin-right: auto;
+}
+
+/* Khung ảnh */
+.khung-banner {
+    position: relative;       
+    width: 96%;              
+    height: 300px;           
+    margin: 20px auto;        
+}
+
+
+.banner-img {
+    width: 100%;            
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;      
+    display: block;
+}
+
+.banner-nut {
+    position: absolute;       
+    bottom: 30px;           
+    left: 40px;               
+    display: flex;            
+}
+
+/*Nút đặt vé*/
+.nut-datve {
+    background-color: #00E5FF;
+    color: black;
+    padding: 10px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+.nut-datve:hover {
+    background-color: #00E5FF;
+    box-shadow: 0 0 15px #00E5FF;
+}
+
+/*Nút xem thông tin*/
+.nut-thongtin {
+    background-color: #00E5FF;
+    color: black;
+    padding: 10px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+.nut-thongtin:hover {
+    background-color: #00E5FF;
+    box-shadow: 0 0 15px #00E5FF;
+}
+/*Nút mũi tên chuyển banner*/
+.mui-ten {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45px;
+    height: 45px;
+    background-color: rgba(40, 43, 50, 0.85);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+.mui-ten:hover {
+    background-color: #00E5FF;
+    color: black;
+}
+
+.mui-ten.trai {
+    left: 20px;
+}
+
+.mui-ten.phai {
+    right: 20px;
+}
