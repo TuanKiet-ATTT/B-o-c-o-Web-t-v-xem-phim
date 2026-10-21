@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Vé Xem Phim - N6 CINEMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00bcd4;
+            --primary-dark: #008ba3;
+            --bg-dark: #0b0f17;
+            --card-bg: #151d2a;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --seat-available: #334155;
+            --seat-vip: #8b5cf6;
+            --seat-couple: #ec4899;
+            --seat-selected: #00bcd4;
+            --seat-occupied: #475569;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; }
+
+        header { background-color: var(--card-bg); border-bottom: 2px solid var(--primary); padding: 12px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 24px; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: var(--primary); }
+
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; transition: 0.3s; }
+        nav a:hover, nav a.active { color: var(--primary); }
+
+        .timer-bar { background: rgba(225, 29, 72, 0.15); border-bottom: 1px solid #e11d48; color: #f43f5e; text-align: center; padding: 8px; font-size: 13px; font-weight: bold; }
+
+        .stepper-container { background-color: #0f172a; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+        .stepper { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0 20px; }
+        .step { display: flex; align-items: center; gap: 10px; color: var(--text-muted); }
+        .step.active { color: var(--primary); }
+        .step.completed { color: #10b981; }
+
+        .step-number { width: 32px; height: 32px; border-radius: 50%; background: var(--card-bg); border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+        .step.active .step-number { border-color: var(--primary); background: var(--primary); color: #000; }
+
+        .main-container { max-width: 1300px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 380px; gap: 25px; flex: 1; width: 100%; }
+        .booking-section { background: var(--card-bg); border-radius: 12px; padding: 25px; border: 1px solid var(--border-color); }
+        .section-title { font-size: 18px; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+
+        .form-select { width: 100%; padding: 12px; background: #1e293b; border: 1px solid var(--primary); border-radius: 8px; color: #fff; font-size: 15px; font-weight: 600; outline: none; cursor: pointer; margin-bottom: 25px; }
+
+        .showtime-grid { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 25px; }
+        .time-chip { padding: 10px 18px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; text-align: center; }
+        .time-chip:hover, .time-chip.active { border-color: var(--primary); background: rgba(0, 188, 212, 0.1); color: var(--primary); }
+        .time-chip small { display: block; font-size: 11px; color: var(--text-muted); font-weight: normal; }
+
+        .screen-container { text-align: center; margin: 20px 0 30px; }
+        .screen { background: linear-gradient(to bottom, var(--primary), transparent); height: 8px; width: 80%; margin: 0 auto 10px; border-radius: 50%; box-shadow: 0 10px 25px var(--primary); }
+        .screen-text { font-size: 12px; color: var(--text-muted); letter-spacing: 3px; }
+
+        .seating-map { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 10px 0; }
+        .seat-row { display: flex; gap: 8px; align-items: center; }
+        .row-label { width: 20px; font-weight: bold; color: var(--text-muted); font-size: 13px; }
+
+        .seat { width: 32px; height: 32px; border-radius: 6px; background-color: var(--seat-available); display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .seat:hover { transform: scale(1.1); }
+        .seat.vip { background-color: var(--seat-vip); }
+        .seat.couple { width: 68px; background-color: var(--seat-couple); }
+        .seat.selected { background-color: var(--seat-selected) !important; color: #000; font-weight: bold; }
+        .seat.occupied { background-color: var(--seat-occupied); cursor: not-allowed; opacity: 0.5; }
+
+        .seat-legend { display: flex; justify-content: center; gap: 20px; margin-top: 25px; flex-wrap: wrap; font-size: 13px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-box { width: 18px; height: 18px; border-radius: 4px; }
+
+        .form-control { width: 100%; padding: 10px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 6px; color: #fff; outline: none; font-size: 13px; }
+
+        .summary-card { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); position: sticky; top: 80px; height: fit-content; }
+        .movie-mini { display: flex; gap: 15px; margin-bottom: 20px; }
+        .movie-mini img { width: 85px; height: 120px; object-fit: cover; border-radius: 8px; }
+        .movie-info h3 { font-size: 16px; margin-bottom: 8px; }
+
+        .badge-age { background: #e11d48; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .summary-details { border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+        .summary-row { display: flex; justify-content: space-between; color: var(--text-muted); }
+        .summary-row span:last-child { color: #fff; font-weight: 600; }
+
+        .voucher-box { display: flex; gap: 8px; margin-top: 15px; }
+        .btn-apply { background: #1e293b; border: 1px solid var(--primary); color: var(--primary); padding: 0 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+        .total-price { border-top: 1px solid var(--border-color); padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .total-price span:last-child { color: var(--primary); font-size: 22px; font-weight: bold; }
+
+        .btn-checkout { width: 100%; padding: 14px; background: var(--primary); color: #000; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-checkout:hover { background: #00d2d3; box-shadow: 0 0 15px rgba(0, 188, 212, 0.4); }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--card-bg); border: 1px solid var(--primary); border-radius: 12px; padding: 25px; width: 100%; max-width: 420px; text-align: center; position: relative; }
+        .close-modal { position: absolute; top: 10px; right: 15px; color: var(--text-muted); font-size: 20px; cursor: pointer; }
+        .qr-code { width: 180px; height: 180px; margin: 15px auto; background: #fff; padding: 10px; border-radius: 8px; }
+        .qr-code img { width: 100%; height: 100%; }
+        .ticket-box { background: #090d16; border: 1px dashed var(--primary); padding: 15px; border-radius: 8px; text-align: left; margin-top: 15px; font-size: 13px; }
+
+        footer { background-color: #080c14; text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; margin-top: auto; border-top: 1px solid var(--border-color); }
+
+        @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="trangchu.html" class="logo"><i class="fas fa-film"></i> N6 <span>CINEMA</span></a>
+        <nav>
+            <ul>
+                <li><a href="trangchu.html">Trang chủ</a></li>
+                <li><a href="lichchieu.html">Lịch chiếu</a></li>
+                <li><a href="#" class="active">Mua vé</a></li>
+                <li><a href="#">Khuyến mãi</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="timer-bar"><i class="fas fa-history"></i> Màn hình giữ ghế tự động hoàn tất trong: <span id="countdown">05:00</span></div>
+
+    <div class="stepper-container">
+        <div class="stepper">
+            <div class="step completed"><div class="step-number"><i class="fas fa-check"></i></div><span>Chọn Phim</span></div>
+            <div class="step active"><div class="step-number">2</div><span>Chọn Ghế</span></div>
+            <div class="step" id="step3"><div class="step-number">3</div><span>Thanh Toán</span></div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="booking-section">
+            <div class="section-title"><i class="fas fa-map-marker-alt"></i> Chọn Khu Vực & Phim</div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-bottom: 25px;">
+                <select class="form-select" id="citySelect" onchange="onCitySelectChange()" style="margin-bottom:0;">
+                    <option value="ct">Cần Thơ</option>
+                    <option value="vl">Vĩnh Long</option>
+                    <option value="hcm">TP. Hồ Chí Minh</option>
+                    <option value="hn">Hà Nội</option>
+                    <option value="bd">Bình Dương</option>
+                    <option value="dn">Đồng Nai</option>
+                    <option value="dng">Đà Nẵng</option>
+                    <option value="kh">Khánh Hòa</option>
+                    <option value="hue">Thừa Thiên Huế</option>
+                    <option value="hp">Hải Phòng</option>
+                </select>
+                <select class="form-select" id="movieSelect" onchange="onMovieSelectChange(this)" style="margin-bottom:0;"></select>
+            </div>
+
+            <div class="section-title"><i class="far fa-clock"></i> 2. Chọn Suất Chiếu (Hôm Nay)</div>
+            <div class="showtime-grid" id="showtimeGrid"></div>
+
+            <div class="section-title"><i class="fas fa-couch"></i> 3. Chọn Ghế Màn Hình</div>
+            <div class="screen-container"><div class="screen"></div><div class="screen-text">MÀN HÌNH CHÍNH</div></div>
+            <div class="seating-map" id="seatingMap"></div>
+
+            <div class="seat-legend">
+                <div class="legend-item"><div class="legend-box" style="background: var(--seat-available)"></div> Thường (75k)</div>
+                <div class="legend-item"><div class="legend-box" style="background: var(--seat-vip)"></div> VIP (90k)</div>
+                <div class="legend-item"><div class="legend-box" style="background: var(--seat-couple)"></div> Ghế Đôi (160k)</div>
+                <div class="legend-item"><div class="legend-box" style="background: var(--seat-selected)"></div> Đang Chọn</div>
+                <div class="legend-item"><div class="legend-box" style="background: var(--seat-occupied)"></div> Đã Đặt</div>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="movie-mini">
+                <img id="summaryPoster" src="" alt="Poster">
+                <div class="movie-info">
+                    <span class="badge-age" id="summaryAge">T16</span>
+                    <h3 id="summaryMovieTitle">...</h3>
+                    <p style="font-size: 12px; color: var(--text-muted);">2D Phụ Đề - 120 phút</p>
+                </div>
+            </div>
+
+            <div class="summary-details">
+                <div class="summary-row"><span>Rạp chiếu:</span><span id="summaryCinema">N6 Cinema</span></div>
+                <div class="summary-row"><span>Suất chiếu:</span><span id="summaryTime">--:--</span></div>
+                <div class="summary-row"><span>Ghế đã chọn:</span><span id="summarySeats" style="color: var(--primary);">Chưa chọn</span></div>
+                <div class="summary-row" id="discountRow" style="display: none; color: #10b981;"><span>Giảm giá (Voucher):</span><span id="summaryDiscount">-0 đ</span></div>
+            </div>
+
+            <div class="voucher-box">
+                <input type="text" class="form-control" id="voucherCode" placeholder="Mã giảm giá (N6VIP)">
+                <button class="btn-apply" onclick="applyVoucher()">Áp dụng</button>
+            </div>
+
+            <div class="total-price"><span>Tổng tiền:</span><span id="totalPrice">0 đ</span></div>
+            <button class="btn-checkout" onclick="openPaymentModal()">THANH TOÁN NGAY</button>
+        </div>
+    </div>
+
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="paymentStep">
+                <h3 style="color: var(--primary); margin-bottom: 8px;">Quét Mã Thanh Toán VietQR / Momo</h3>
+                <p style="font-size: 12px; color: var(--text-muted);">Vui lòng hoàn tất thanh toán trong thời gian giữ ghế</p>
+                <div class="qr-code"><img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=N6CINEMA_PAYMENT_VERIFIED" alt="QR Code"></div>
+                <p style="font-size: 16px; font-weight: bold; margin-bottom: 15px; color: var(--primary);" id="modalTotal">0 đ</p>
+                <button class="btn-checkout" style="padding: 10px;" onclick="confirmPayment()">XÁC NHẬN ĐÃ CHUYỂN KHOẢN</button>
+            </div>
+
+            <div id="ticketStep" style="display: none;">
+                <i class="fas fa-check-circle" style="font-size: 45px; color: #10b981; margin-bottom: 10px;"></i>
+                <h3 style="color: #10b981;">ĐẶT VÉ THÀNH CÔNG!</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Vé điện tử đã được gửi tới SĐT của bạn</p>
+                <div class="ticket-box">
+                    <p><strong>Phim:</strong> <span id="ticketMovie"></span></p>
+                    <p><strong>Suất chiếu:</strong> <span id="ticketTime"></span></p>
+                    <p><strong>Ghế:</strong> <span id="ticketSeats" style="color: var(--primary);"></span></p>
+                    <p><strong>Mã vé:</strong> <span style="color: #f59e0b; font-weight: bold;">N6-889923</span></p>
+                </div>
+                <button type="button" class="btn-checkout" style="padding: 10px; margin-top: 15px;" onclick="goToHomePage()">VỀ TRANG CHỦ</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 N6 CINEMA. All rights reserved.</footer>
+
+    <script>
+        // Mảng 24 phim chuẩn
+        const allMovies = [
+            { id: 1, title: 'Trại Buôn Người', age: 'T18', poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80' },
+            { id: 2, title: 'Út Lan 2', age: 'T16', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80' },
+            { id: 3, title: 'Avengers: Hồi Kết', age: 'T13', poster: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80' },
+            { id: 4, title: 'Scotty Giải Cứu', age: 'P', poster: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=500&q=80' },
+            { id: 5, title: 'Trái Tim Quả Thù', age: 'T18', poster: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=500&q=80' },
+            { id: 6, title: 'Khóa Chặt Cửa', age: 'T16', poster: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=500&q=80' },
+            { id: 7, title: 'Siêu Anh Hùng X', age: 'T13', poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80' },
+            { id: 8, title: 'Đại Chiến Vũ Trụ', age: 'T13', poster: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&w=500&q=80' },
+            { id: 9, title: 'Bí Mật Đêm Khuya', age: 'T18', poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=500&q=80' },
+            { id: 10, title: 'Cuộc Đua Tốc Độ', age: 'T16', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80' },
+            { id: 11, title: 'Truy Tìm Kho Báu', age: 'P', poster: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80' },
+            { id: 12, title: 'Hành Trình Mới', age: 'T16', poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=500&q=80' },
+            { id: 13, title: 'Avatar: Dòng Thời Gian', age: 'T13', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80' },
+            { id: 14, title: 'Kẻ Cắp Mặt Trăng 4', age: 'P', poster: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=500&q=80' },
+            { id: 15, title: 'Vũ Trụ Bí Ẩn', age: 'T13', poster: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80' },
+            { id: 16, title: 'Đêm Kinh Hoàng', age: 'T18', poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80' },
+            { id: 17, title: 'Huyền Thoại Rồng', age: 'P', poster: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=500&q=80' },
+            { id: 18, title: 'Cuộc Chiến Tương Lai', age: 'T16', poster: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80' },
+            { id: 19, title: 'Ma Trận Thực Tại', age: 'T16', poster: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=500&q=80' },
+            { id: 20, title: 'Siêu Tốc Độ', age: 'T13', poster: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=500&q=80' },
+            { id: 21, title: 'Đại Dương Cổ Đại', age: 'P', poster: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=500&q=80' },
+            { id: 22, title: 'Thành Phố Lên Đèn', age: 'T13', poster: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=500&q=80' },
+            { id: 23, title: 'Bí Mật Rừng Tối', age: 'T18', poster: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=500&q=80' },
+            { id: 24, title: 'Nhịp Điệu Âm Nhạc', age: 'P', poster: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=500&q=80' }
+        ];
+
+        const cityData = {
+            'ct': { cinemaName: 'N6 Cinema Cần Thơ', movieIds: [12, 13, 1, 2, 3, 7, 8, 14, 19, 20] },
+            'vl': { cinemaName: 'N6 Cinema Vĩnh Long', movieIds: [16, 14, 5, 6, 9, 11, 15, 17, 21, 23] },
+            'hcm': { cinemaName: 'N6 Cinema Sài Gòn', movieIds: [12, 13, 3, 18, 19, 22, 24, 8, 10, 4] },
+            'hn': { cinemaName: 'N6 Cinema Hà Nội', movieIds: [13, 14, 15, 18, 19, 7, 8, 1, 2, 6] },
+            'bd': { cinemaName: 'N6 Cinema Bình Dương', movieIds: [10, 11, 20, 21, 1, 2, 3, 4] },
+            'dn': { cinemaName: 'N6 Cinema Đồng Nai', movieIds: [5, 6, 7, 8, 9, 16, 17, 18] },
+            'dng': { cinemaName: 'N6 Cinema Đà Nẵng', movieIds: [12, 13, 14, 22, 23, 24, 19, 20] },
+            'kh': { cinemaName: 'N6 Cinema Khánh Hòa', movieIds: [21, 22, 23, 24, 11, 12, 13, 14] },
+            'hue': { cinemaName: 'N6 Cinema Huế', movieIds: [1, 3, 5, 7, 9, 15, 17, 19] },
+            'hp': { cinemaName: 'N6 Cinema Hải Phòng', movieIds: [2, 4, 6, 8, 10, 16, 18, 20] }
+        };
+
+        function generateShowtimes(movieId) {
+            const timeList = [
+                [{ time: '18:30', hall: 'Rạp 1 - 2D' }, { time: '19:45', hall: 'Rạp 3 - 2D' }, { time: '21:00', hall: 'Rạp 2 - 2D' }],
+                [{ time: '19:00', hall: 'Rạp 5 - 3D' }, { time: '20:30', hall: 'Rạp 5 - 3D' }, { time: '22:00', hall: 'Rạp 5 - 3D' }],
+                [{ time: '17:30', hall: 'Rạp 2 - 2D' }, { time: '20:00', hall: 'Rạp 1 - 2D' }, { time: '22:15', hall: 'Rạp 4 - 2D' }]
+            ];
+            return timeList[movieId % 3];
+        }
+
+        const seatPrices = { standard: 75000, vip: 90000, couple: 160000 };
+        
+        let currentCityKey = 'ct';
+        let currentMovie = null;
+        let selectedShowtime = "";
+        let selectedHall = "";
+        let selectedSeats = [];
+        let discountPercent = 0;
+
+        function onCitySelectChange() {
+            currentCityKey = document.getElementById('citySelect').value;
+            const currentCity = cityData[currentCityKey] || cityData['ct'];
+            
+            document.getElementById('summaryCinema').innerText = currentCity.cinemaName;
+
+            const cityMovies = allMovies.filter(m => currentCity.movieIds.includes(m.id));
+            const selectEl = document.getElementById('movieSelect');
+            selectEl.innerHTML = cityMovies.map(m => `<option value="${m.id}">${m.title} (${m.age})</option>`).join('');
+
+            selectMovie(cityMovies[0].id);
+        }
+
+        function onMovieSelectChange(selectEl) {
+            selectMovie(parseInt(selectEl.value));
+        }
+
+        function selectMovie(id, targetTime = null, targetHall = null) {
+            currentMovie = allMovies.find(m => m.id === id) || allMovies[0];
+            
+            if (currentMovie) {
+                document.getElementById('movieSelect').value = currentMovie.id;
+                document.getElementById('summaryPoster').src = currentMovie.poster;
+                document.getElementById('summaryMovieTitle').innerText = currentMovie.title;
+                document.getElementById('summaryAge').innerText = currentMovie.age;
+                
+                renderShowtimes(targetTime, targetHall);
+            }
+        }
+
+        function renderShowtimes(targetTime = null, targetHall = null) {
+            const grid = document.getElementById('showtimeGrid');
+            const showtimes = generateShowtimes(currentMovie.id);
+
+            grid.innerHTML = showtimes.map((st, index) => {
+                const isActive = targetTime ? (st.time === targetTime) : (index === 0);
+                if (isActive) {
+                    selectedShowtime = st.time;
+                    selectedHall = targetHall || st.hall;
+                }
+                return `
+                    <div class="time-chip ${isActive ? 'active' : ''}" onclick="selectTimeChip(this, '${st.time}', '${st.hall}')">
+                        ${st.time} <small>${st.hall}</small>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('summaryTime').innerText = selectedShowtime + ' - Hôm nay';
+        }
+
+        function selectTimeChip(element, time, hall) {
+            document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            selectedShowtime = time;
+            selectedHall = hall;
+            document.getElementById('summaryTime').innerText = selectedShowtime + ' - Hôm nay';
+        }
+
+        function checkUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cityParam = urlParams.get('city');
+            const movieId = parseInt(urlParams.get('movie'));
+            const timeParam = urlParams.get('time');
+            const hallParam = urlParams.get('hall');
+
+            if (cityParam && cityData[cityParam]) {
+                currentCityKey = cityParam;
+                document.getElementById('citySelect').value = currentCityKey;
+            }
+
+            onCitySelectChange();
+
+            if (movieId) {
+                selectMovie(movieId, timeParam, hallParam);
+            }
+        }
+
+        function generateSeatingMap() {
+            const container = document.getElementById('seatingMap');
+            container.innerHTML = '';
+            const rows = [
+                { row: 'A', type: 'standard', count: 8 },
+                { row: 'B', type: 'standard', count: 8 },
+                { row: 'C', type: 'vip', count: 8 },
+                { row: 'D', type: 'vip', count: 8 },
+                { row: 'E', type: 'couple', count: 4 }
+            ];
+            //Ẩn ghế 
+            const occupied = [];
+
+            rows.forEach(r => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'seat-row';
+
+                const label = document.createElement('div');
+                label.className = 'row-label';
+                label.innerText = r.row;
+                rowDiv.appendChild(label);
+
+                for (let i = 1; i <= r.count; i++) {
+                    const seatId = r.row + i;
+                    const seat = document.createElement('div');
+                    seat.className = `seat ${r.type}`;
+                    if (occupied.includes(seatId)) seat.classList.add('occupied');
+                    seat.innerText = seatId;
+                    
+                    seat.onclick = () => toggleSeat(seat, seatId, r.type);
+                    rowDiv.appendChild(seat);
+                }
+                container.appendChild(rowDiv);
+            });
+        }
+
+        function toggleSeat(element, seatId, type) {
+            if (element.classList.contains('occupied')) return;
+
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedSeats = selectedSeats.filter(s => s.id !== seatId);
+            } else {
+                element.classList.add('selected');
+                selectedSeats.push({ id: seatId, price: seatPrices[type] });
+            }
+            updateSummary();
+        }
+
+        function applyVoucher() {
+            const code = document.getElementById('voucherCode').value.trim().toUpperCase();
+            if (code === 'N6VIP') {
+                discountPercent = 0.1;
+                alert('Áp dụng mã N6VIP thành công! Giảm 10%.');
+            } else {
+                discountPercent = 0;
+                alert('Mã không hợp lệ!');
+            }
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const seatsText = selectedSeats.map(s => s.id).join(', ');
+            document.getElementById('summarySeats').innerText = seatsText || 'Chưa chọn';
+
+            let seatTotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);
+            let discount = seatTotal * discountPercent;
+
+            if (discount > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('summaryDiscount').innerText = '-' + discount.toLocaleString('vi-VN') + ' đ';
+            } else {
+                document.getElementById('discountRow').style.display = 'none';
+            }
+
+            let finalTotal = seatTotal - discount;
+            document.getElementById('totalPrice').innerText = finalTotal.toLocaleString('vi-VN') + ' đ';
+        }
+
+        function startCountdown() {
+            let time = 300;
+            const timerEl = document.getElementById('countdown');
+            setInterval(() => {
+                let minutes = Math.floor(time / 60);
+                let seconds = time % 60;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+                timerEl.innerText = `0${minutes}:${seconds}`;
+                if (time > 0) time--;
+            }, 1000);
+        }
+
+        function openPaymentModal() {
+            if (selectedSeats.length === 0) {
+                alert('Vui lòng chọn ít nhất 1 ghế trước khi thanh toán!');
+                return;
+            }
+            document.getElementById('paymentStep').style.display = 'block';
+            document.getElementById('ticketStep').style.display = 'none';
+            
+            let currentTotal = document.getElementById('totalPrice').innerText;
+            document.getElementById('modalTotal').innerText = 'Tổng thanh toán: ' + currentTotal;
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function confirmPayment() {
+            document.getElementById('paymentStep').style.display = 'none';
+            document.getElementById('ticketStep').style.display = 'block';
+            document.getElementById('step3').classList.add('completed');
+
+            document.getElementById('ticketMovie').innerText = currentMovie.title;
+            document.getElementById('ticketTime').innerText = selectedShowtime + ' - ' + selectedHall;
+            document.getElementById('ticketSeats').innerText = selectedSeats.map(s => s.id).join(', ');
+        }
+
+        function goToHomePage() {
+            window.location.href = 'trangchu.html';
+        }
+
+        checkUrlParameters();
+        generateSeatingMap();
+        startCountdown();
+    </script>
+</body>
+</html>

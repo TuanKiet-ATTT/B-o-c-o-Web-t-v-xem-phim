@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Chiếu Phim - N6 CINEMA</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00bcd4;
+            --primary-dark: #008ba3;
+            --bg-dark: #0b0f17;
+            --card-bg: #151d2a;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .box-logo { text-align: center; margin: 15px 0; }
+        .logo { font-size: 28px; font-weight: 800; color: #fbfbfc; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; }
+        .logo i, .logo span { color: var(--primary); }
+
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; width: 100%; flex: 1; }
+        .page-title { text-align: center; font-size: 26px; color: #fff; margin-bottom: 25px; }
+        .page-title span { color: var(--primary); }
+
+        .filter-bar { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .filter-group { display: flex; flex-direction: column; gap: 6px; }
+        .filter-group label { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+
+        .form-select { width: 100%; padding: 10px 12px; background: #1e293b; border: 1px solid var(--border-color); border-radius: 6px; color: #fff; outline: none; cursor: pointer; font-size: 14px; }
+        .form-select:focus { border-color: var(--primary); }
+
+        .date-tabs { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; }
+        .date-tab { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 20px; text-align: center; cursor: pointer; min-width: 110px; transition: all 0.2s ease; }
+        .date-tab.active, .date-tab:hover { border-color: var(--primary); background: rgba(0, 188, 212, 0.15); }
+        .date-tab .day { font-size: 13px; color: var(--text-muted); display: block; }
+        .date-tab .date { font-size: 16px; font-weight: bold; color: #fff; margin-top: 4px; }
+        .date-tab.active .date, .date-tab.active .day { color: var(--primary); }
+
+        .schedule-list { display: flex; flex-direction: column; gap: 20px; }
+        .schedule-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: grid; grid-template-columns: 120px 1fr; gap: 20px; align-items: start; }
+        .schedule-card img { width: 100%; height: 170px; object-fit: cover; border-radius: 8px; }
+
+        .movie-details h3 { font-size: 18px; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .badge-age { padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold; color: #fff; }
+        .badge-age.t18 { background: #7c3aed; }
+        .badge-age.t16 { background: #e11d48; }
+        .badge-age.t13 { background: #059669; }
+        .badge-age.p { background: #2563eb; }
+
+        .movie-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; display: flex; gap: 15px; }
+        .movie-meta span { display: flex; align-items: center; gap: 5px; }
+
+        .showtime-container { border-top: 1px solid var(--border-color); padding-top: 15px; }
+        .showtime-label { font-size: 13px; color: var(--primary); font-weight: 600; margin-bottom: 10px; }
+        .showtime-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .btn-time { padding: 8px 16px; background: #1e293b; border: 1px solid var(--primary); color: #fff; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; transition: all 0.2s ease; text-align: center; }
+        .btn-time:hover { background: var(--primary); color: #000; box-shadow: 0 0 10px rgba(0, 188, 212, 0.4); }
+        .btn-time small { display: block; font-size: 10px; font-weight: normal; color: var(--text-muted); }
+        .btn-time:hover small { color: #000; }
+
+        @media (max-width: 768px) {
+            .schedule-card { grid-template-columns: 1fr; }
+            .schedule-card img { height: 220px; }
+        }
+    </style>
+</head>
+<body>
+
+    <hr class="duong-ngan-cach">
+    <div class="box-logo">
+        <a href="trangchu.html" class="logo">
+            <i class="fas fa-film"></i> N6 <span>CINEMA</span>
+        </a>
+    </div>
+    <hr class="duong-ngan-cach">
+
+    <div class="gachduoiLink canhgiua">  
+        
+        <a href="lichchieu.html" style="color: var(--primary); font-weight: bold;">LỊCH CHIẾU</a>
+        <a href="datve.html">MUA VÉ</a>
+        <a href="khuyenmai.html">KHUYẾN MÃI</a>
+        <a href="lichsudatve.html">LỊCH SỬ ĐẶT VÉ</a>
+         
+        <a href="dangnhap.html">ĐĂNG NHẬP</a>
+        <a href="dangky.html">ĐĂNG KÝ</a>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">LỊCH CHIẾU <span>PHIM TOÀN HỆ THỐNG</span></h1>
+
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label><i class="fas fa-map-marker-alt"></i> Tỉnh / Thành phố</label>
+                <select class="form-select" id="cityFilter" onchange="onCityChange()">
+                    <optgroup label="Miền Nam">
+                        <option value="ct" selected>Cần Thơ</option>
+                        <option value="vl">Vĩnh Long</option>
+                        <option value="hcm">TP. Hồ Chí Minh</option>
+                        <option value="bd">Bình Dương</option>
+                        <option value="dn">Đồng Nai</option>
+                    </optgroup>
+                    <optgroup label="Miền Trung">
+                        <option value="dng">Đà Nẵng</option>
+                        <option value="kh">Khánh Hòa (Nha Trang)</option>
+                        <option value="hue">Thừa Thiên Huế</option>
+                    </optgroup>
+                    <optgroup label="Miền Bắc">
+                        <option value="hn">Hà Nội</option>
+                        <option value="hp">Hải Phòng</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label><i class="fas fa-video"></i> Rạp Chiếu</label>
+                <select class="form-select" id="cinemaFilter" onchange="renderSchedules()">
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label><i class="fas fa-film"></i> Chọn Phim</label>
+                <select class="form-select" id="movieFilter" onchange="renderSchedules()">
+                    <option value="all">Tất cả 24 bộ phim</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="date-tabs">
+            <div class="date-tab active" onclick="selectDate(this)"><span class="day">Thứ Tư</span><span class="date">21/10</span></div>
+            <div class="date-tab" onclick="selectDate(this)"><span class="day">Thứ Năm</span><span class="date">22/10</span></div>
+            <div class="date-tab" onclick="selectDate(this)"><span class="day">Thứ Sáu</span><span class="date">23/10</span></div>
+            <div class="date-tab" onclick="selectDate(this)"><span class="day">Thứ Bảy</span><span class="date">24/10</span></div>
+            <div class="date-tab" onclick="selectDate(this)"><span class="day">Chủ Nhật</span><span class="date">25/10</span></div>
+            <div class="date-tab" onclick="selectDate(this)"><span class="day">Thứ Hai</span><span class="date">26/10</span></div>
+            <div class="date-tab" onclick="selectDate(this)"><span class="day">Thứ Ba</span><span class="date">27/10</span></div>
+        </div>
+
+        <div class="schedule-list" id="scheduleListContainer">
+        </div>
+    </div>
+
+    <footer class="footer" style="margin-top: 50px;">
+      <div class="footer-top-bar"></div>
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3 class="footer-title logo-text">N6 CINEMA</h3>
+          <p class="footer-desc">Hệ thống rạp chiếu phim hiện đại. Mang lại trải nghiệm giải trí hoàn hảo.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 N6 CINEMA. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+        // Danh sách đầy đủ 24 phim chuẩn ảnh
+        const allMovies = [
+            { id: 1, title: 'Trại Buôn Người', age: 'T18', ageClass: 't18', poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80', time: '115 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 2, title: 'Út Lan 2', age: 'T16', ageClass: 't16', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80', time: '105 phút', sub: 'Tiếng Việt', format: '2D Digital' },
+            { id: 3, title: 'Avengers: Hồi Kết', age: 'T13', ageClass: 't13', poster: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80', time: '180 phút', sub: 'Phụ đề tiếng Việt', format: '2D/3D Digital' },
+            { id: 4, title: 'Scotty Giải Cứu', age: 'P', ageClass: 'p', poster: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=500&q=80', time: '90 phút', sub: 'Lồng tiếng', format: '2D Digital' },
+            { id: 5, title: 'Trái Tim Quả Thù', age: 'T18', ageClass: 't18', poster: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=500&q=80', time: '110 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 6, title: 'Khóa Chặt Cửa', age: 'T16', ageClass: 't16', poster: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=500&q=80', time: '100 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 7, title: 'Siêu Anh Hùng X', age: 'T13', ageClass: 't13', poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80', time: '125 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 8, title: 'Đại Chiến Vũ Trụ', age: 'T13', ageClass: 't13', poster: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&w=500&q=80', time: '135 phút', sub: 'Phụ đề tiếng Việt', format: '3D Digital' },
+            { id: 9, title: 'Bí Mật Đêm Khuya', age: 'T18', ageClass: 't18', poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=500&q=80', time: '98 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 10, title: 'Cuộc Đua Tốc Độ', age: 'T16', ageClass: 't16', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80', time: '115 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 11, title: 'Truy Tìm Kho Báu', age: 'P', ageClass: 'p', poster: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80', time: '108 phút', sub: 'Lồng tiếng', format: '2D Digital' },
+            { id: 12, title: 'Hành Trình Mới', age: 'T16', ageClass: 't16', poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=500&q=80', time: '120 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 13, title: 'Avatar: Dòng Thời Gian', age: 'T13', ageClass: 't13', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80', time: '150 phút', sub: 'Lồng tiếng', format: '3D Digital' },
+            { id: 14, title: 'Kẻ Cắp Mặt Trăng 4', age: 'P', ageClass: 'p', poster: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=500&q=80', time: '95 phút', sub: 'Lồng tiếng', format: '2D Digital' },
+            { id: 15, title: 'Vũ Trụ Bí Ẩn', age: 'T13', ageClass: 't13', poster: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80', time: '130 phút', sub: 'Phụ đề tiếng Việt', format: '3D Digital' },
+            { id: 16, title: 'Đêm Kinh Hoàng', age: 'T18', ageClass: 't18', poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80', time: '102 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 17, title: 'Huyền Thoại Rồng', age: 'P', ageClass: 'p', poster: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=500&q=80', time: '112 phút', sub: 'Lồng tiếng', format: '2D Digital' },
+            { id: 18, title: 'Cuộc Chiến Tương Lai', age: 'T16', ageClass: 't16', poster: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80', time: '140 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 19, title: 'Ma Trận Thực Tại', age: 'T16', ageClass: 't16', poster: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=500&q=80', time: '136 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 20, title: 'Siêu Tốc Độ', age: 'T13', ageClass: 't13', poster: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=500&q=80', time: '118 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 21, title: 'Đại Dương Cổ Đại', age: 'P', ageClass: 'p', poster: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=500&q=80', time: '88 phút', sub: 'Lồng tiếng', format: '2D Digital' },
+            { id: 22, title: 'Thành Phố Lên Đèn', age: 'T13', ageClass: 't13', poster: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=500&q=80', time: '110 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 23, title: 'Bí Mật Rừng Tối', age: 'T18', ageClass: 't18', poster: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=500&q=80', time: '104 phút', sub: 'Phụ đề tiếng Việt', format: '2D Digital' },
+            { id: 24, title: 'Nhịp Điệu Âm Nhạc', age: 'P', ageClass: 'p', poster: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=500&q=80', time: '96 phút', sub: 'Lồng tiếng', format: '2D Digital' }
+        ];
+
+        // Dữ liệu cấu hình rạp & phân bổ suất chiếu cho từng tỉnh
+        const cityData = {
+            'ct': { name: 'Cần Thơ', cinemas: [{ id: 'ct1', name: 'N6 Cinema Cần Thơ (Ninh Kiều)' }], movieIds: [12, 13, 1, 2, 3, 7, 8, 14, 19, 20] },
+            'vl': { name: 'Vĩnh Long', cinemas: [{ id: 'vl1', name: 'N6 Cinema Vĩnh Long (TP Vĩnh Long)' }], movieIds: [16, 14, 5, 6, 9, 11, 15, 17, 21, 23] },
+            'hcm': { name: 'TP. Hồ Chí Minh', cinemas: [{ id: 'hcm1', name: 'N6 Cinema Sài Gòn (Quận 1)' }, { id: 'hcm2', name: 'N6 Cinema Thủ Đức' }], movieIds: [12, 13, 3, 18, 19, 22, 24, 8, 10, 4] },
+            'hn': { name: 'Hà Nội', cinemas: [{ id: 'hn1', name: 'N6 Cinema Hà Nội (Cầu Giấy)' }], movieIds: [13, 14, 15, 18, 19, 7, 8, 1, 2, 6] },
+            'bd': { name: 'Bình Dương', cinemas: [{ id: 'bd1', name: 'N6 Cinema Thủ Dầu Một' }], movieIds: [10, 11, 20, 21, 1, 2, 3, 4] },
+            'dn': { name: 'Đồng Nai', cinemas: [{ id: 'dn1', name: 'N6 Cinema Biên Hòa' }], movieIds: [5, 6, 7, 8, 9, 16, 17, 18] },
+            'dng': { name: 'Đà Nẵng', cinemas: [{ id: 'dng1', name: 'N6 Cinema Hải Châu' }], movieIds: [12, 13, 14, 22, 23, 24, 19, 20] },
+            'kh': { name: 'Khánh Hòa', cinemas: [{ id: 'kh1', name: 'N6 Cinema Nha Trang' }], movieIds: [21, 22, 23, 24, 11, 12, 13, 14] },
+            'hue': { name: 'Thừa Thiên Huế', cinemas: [{ id: 'hue1', name: 'N6 Cinema TP. Huế' }], movieIds: [1, 3, 5, 7, 9, 15, 17, 19] },
+            'hp': { name: 'Hải Phòng', cinemas: [{ id: 'hp1', name: 'N6 Cinema Hải Phòng' }], movieIds: [2, 4, 6, 8, 10, 16, 18, 20] }
+        };
+
+        // Hàm tạo khung giờ chiếu mặc định sinh ra theo ID phim
+        function generateShowtimes(movieId) {
+            const timeList = [
+                [{ time: '18:30', hall: 'Rạp 1 - 2D' }, { time: '19:45', hall: 'Rạp 3 - 2D' }, { time: '21:00', hall: 'Rạp 2 - 2D' }],
+                [{ time: '19:00', hall: 'Rạp 5 - 3D' }, { time: '20:30', hall: 'Rạp 5 - 3D' }, { time: '22:00', hall: 'Rạp 5 - 3D' }],
+                [{ time: '17:30', hall: 'Rạp 2 - 2D' }, { time: '20:00', hall: 'Rạp 1 - 2D' }, { time: '22:15', hall: 'Rạp 4 - 2D' }]
+            ];
+            return timeList[movieId % 3];
+        }
+
+        function populateMovieFilter() {
+            const select = document.getElementById('movieFilter');
+            select.innerHTML = '<option value="all">Tất cả 24 bộ phim</option>' + 
+                allMovies.map(m => `<option value="${m.id}">${m.title}</option>`).join('');
+        }
+
+        function onCityChange() {
+            const cityKey = document.getElementById('cityFilter').value;
+            const currentCity = cityData[cityKey] || cityData['ct'];
+            
+            const cinemaSelect = document.getElementById('cinemaFilter');
+            cinemaSelect.innerHTML = currentCity.cinemas.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+            renderSchedules();
+        }
+
+        function renderSchedules() {
+            const cityKey = document.getElementById('cityFilter').value;
+            const movieFilterVal = document.getElementById('movieFilter').value;
+            const currentCity = cityData[cityKey] || cityData['ct'];
+            const container = document.getElementById('scheduleListContainer');
+
+            let moviesToRender = allMovies.filter(m => currentCity.movieIds.includes(m.id));
+
+            if (movieFilterVal !== 'all') {
+                moviesToRender = moviesToRender.filter(m => m.id == movieFilterVal);
+            }
+
+            if (moviesToRender.length === 0) {
+                container.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 30px;">Không có lịch chiếu cho phim này tại ${currentCity.name}.</p>`;
+                return;
+            }
+
+            container.innerHTML = moviesToRender.map(m => {
+                const showtimes = generateShowtimes(m.id);
+                return `
+                    <div class="schedule-card">
+                        <img src="${m.poster}" alt="${m.title}">
+                        <div class="movie-details">
+                            <h3>${m.title} <span class="badge-age ${m.ageClass}">${m.age}</span></h3>
+                            <div class="movie-meta">
+                                <span><i class="far fa-clock"></i> ${m.time}</span>
+                                <span><i class="fas fa-globe"></i> ${m.sub}</span>
+                                <span><i class="fas fa-film"></i> ${m.format}</span>
+                            </div>
+                            
+                            <div class="showtime-container">
+                                <div class="showtime-label"><i class="fas fa-door-open"></i> Suất chiếu tại ${currentCity.name}:</div>
+                                <div class="showtime-buttons">
+                                    ${showtimes.map(st => `
+                                        <a href="datve.html?city=${cityKey}&movie=${m.id}&time=${st.time}&hall=${encodeURIComponent(st.hall)}" class="btn-time">
+                                            ${st.time} <small>${st.hall}</small>
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectDate(element) {
+            document.querySelectorAll('.date-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Khởi tạo
+        populateMovieFilter();
+        onCityChange();
+    </script>
+</body>
+</html>

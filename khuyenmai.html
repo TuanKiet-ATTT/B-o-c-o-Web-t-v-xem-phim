@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khuyến Mãi & Ưu Đãi - N6 CINEMA</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00bcd4;
+            --primary-dark: #008ba3;
+            --bg-dark: #0b0f17;
+            --card-bg: #151d2a;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* LOGO CANH GIỮA */
+        .box-logo {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i, .logo span {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 30px;
+        }
+
+        .page-title span {
+            color: var(--primary);
+        }
+
+        /* BANNER NỔI BẬT KHUYẾN MÃI */
+        .featured-promo {
+            background: linear-gradient(135deg, rgba(0, 188, 212, 0.2), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .featured-text {
+            max-width: 600px;
+        }
+
+        .featured-badge {
+            background: #e11d48;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .featured-text h2 {
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .featured-text p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .btn-claim {
+            padding: 12px 28px;
+            background: var(--primary);
+            color: #000;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-claim:hover {
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* DANH MỤC LỌC */
+        .promo-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        /* GRID KHUYẾN MÃI */
+        .promo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .promo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .promo-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .promo-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+        }
+
+        .promo-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .promo-tag {
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .promo-title {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .promo-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .promo-code-box {
+            background: #1e293b;
+            border: 1px dashed var(--primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-text {
+            font-family: monospace;
+            font-weight: bold;
+            color: #f59e0b;
+            font-size: 14px;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .promo-grid { grid-template-columns: 1fr; }
+            .featured-promo { padding: 20px; }
+            .featured-text h2 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGO N6 CINEMA CANH GIỮA -->
+    <hr class="duong-ngan-cach">
+    <div class="box-logo">
+        <a href="trangchu.html" class="logo">
+            <i class="fas fa-film"></i> N6 <span>CINEMA</span>
+        </a>
+    </div>
+    <hr class="duong-ngan-cach">
+
+    <!-- MENU ĐIỀU HƯỚNG -->
+    <div class="gachduoiLink canhgiua">  
+
+        <a href="lichchieu.html">LỊCH CHIẾU</a>
+        <a href="datve.html">MUA VÉ</a>
+        <a href="khuyenmai.html" style="color: var(--primary); font-weight: bold;">KHUYẾN MÃI</a>
+        <a href="lichsudatve.html">LỊCH SỬ ĐẶT VÉ</a>
+       
+         
+        <a href="dangnhap.html">ĐĂNG NHẬP</a>
+        <a href="dangky.html">ĐĂNG KÝ</a>
+    </div>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="container">
+        
+        <h1 class="page-title">CHƯƠNG TRÌNH <span>KHUYẾN MÃI & ƯU ĐÃI</span></h1>
+
+        <!-- BANNER NỔI BẬT -->
+        <div class="featured-promo">
+            <div class="featured-text">
+                <span class="featured-badge"><i class="fas fa-fire"></i> HOT THÁNG 10</span>
+                <h2>ĐỒNG GIÁ 45K CHO HỌC SINH - SINH VIÊN</h2>
+                <p>Áp dụng cho tất cả suất chiếu từ Thứ 2 đến Thứ 6 hàng tuần trên toàn hệ thống N6 Cinema khi xuất trình thẻ HS/SV hợp lệ.</p>
+                <a href="datve.html" class="btn-claim">ĐẶT VÉ NGAY</a>
+            </div>
+        </div>
+
+        <!-- TABS DANH MỤC LỌC -->
+        <div class="promo-tabs">
+            <button class="tab-btn active" onclick="filterPromo('all')">Tất Cả Ưu Đãi</button>
+            <button class="tab-btn" onclick="filterPromo('member')">Thành Viên VIP</button>
+            <button class="tab-btn" onclick="filterPromo('ticket')">Giảm Giá Vé</button>
+            <button class="tab-btn" onclick="filterPromo('combo')">Combo Bắp Nước</button>
+        </div>
+
+        <!-- LIST CÁC THẺ KHUYẾN MÃI -->
+        <div class="promo-grid">
+
+            <!-- Card 1 -->
+            <div class="promo-card" data-category="ticket">
+                <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=600&q=80" alt="Mã N6VIP">
+                <div class="promo-content">
+                    <span class="promo-tag"><i class="fas fa-ticket-alt"></i> Vé Xem Phim</span>
+                    <h3 class="promo-title">Giảm 10% Cho Đơn Hàng Mua Vé Online</h3>
+                    <p class="promo-desc">Nhập mã N6VIP tại trang thanh toán để được giảm ngay 10% trên tổng giá trị vé xem phim.</p>
+                    <div class="promo-code-box">
+                        <span class="code-text" id="code1">N6VIP</span>
+                        <button class="btn-copy" onclick="copyCode('code1')"><i class="far fa-copy"></i> Sao chép</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="promo-card" data-category="combo">
+                <img src="https://images.unsplash.com/photo-1572177191856-3cde618dee1f?auto=format&fit=crop&w=600&q=80" alt="Bắp nước">
+                <div class="promo-content">
+                    <span class="promo-tag"><i class="fas fa-cookie-bite"></i> Combo Đồ Ăn</span>
+                    <h3 class="promo-title">Mua 2 Vé Tặng 1 Bắp Rang Bơ Ngọt</h3>
+                    <p class="promo-desc">Áp dụng khi mua 2 vé xem phim bất kỳ vào các ngày Thứ 3 Hàng Tuần (Happy Tuesday).</p>
+                    <div class="promo-code-box">
+                        <span class="code-text" id="code2">BAPNGOTN6</span>
+                        <button class="btn-copy" onclick="copyCode('code2')"><i class="far fa-copy"></i> Sao chép</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="promo-card" data-category="member">
+    <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80" alt="Thẻ thành viên">
+    <div class="promo-content">
+        <span class="promo-tag"><i class="fas fa-crown"></i> N6 Member VIP</span>
+        <h3 class="promo-title">Nhận Vé Miễn Phí Tháng Sinh Nhật</h3>
+        <p class="promo-desc">Thành viên có hạng N6 VIP được tặng 01 vé xem phim 2D + 01 Combo nước ngọt trong tháng sinh nhật.</p>
+        <div class="promo-code-box">
+            <span class="code-text" id="code3">HAPPYBDAY</span>
+            <button class="btn-copy" onclick="copyCode('code3')"><i class="far fa-copy"></i> Sao chép</button>
+        </div>
+    </div>
+</div>
+
+            <!-- Card 4 -->
+            <div class="promo-card" data-category="ticket">
+                <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=600&q=80" alt="Suất muộn">
+                <div class="promo-content">
+                    <span class="promo-tag"><i class="fas fa-moon"></i> Cú Đêm Cinema</span>
+                    <h3 class="promo-title">Đồng Giá 50K Suất Chiếu Muộn Sau 22h</h3>
+                    <p class="promo-desc">Tận hưởng không gian phim đêm với mức giá ưu đãi cực hấp dẫn dành cho các tín đồ xem phim muộn.</p>
+                    <div class="promo-code-box">
+                        <span class="code-text" id="code4">CUDEM22H</span>
+                        <button class="btn-copy" onclick="copyCode('code4')"><i class="far fa-copy"></i> Sao chép</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER CHUẨN ĐỒNG BỘ -->
+    <footer class="footer" style="margin-top: 50px;">
+      <div class="footer-top-bar"></div>
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3 class="footer-title logo-text">N6 CINEMA</h3>
+          <p class="footer-desc">
+            Hệ thống rạp chiếu phim hiện đại kết hợp dịch vụ xe trung chuyển hành khách hàng đầu. Mang lại trải nghiệm giải trí hoàn hảo.
+          </p>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-title">Quy Định & Điều Khoản</h3>
+          <ul class="footer-links">
+            <li><a href="#">Quy định chung</a></li>
+            <li><a href="#">Điều khoản giao dịch</a></li>
+            <li><a href="#">Chính sách thanh toán</a></li>
+            <li><a href="#">Chính sách bảo mật</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-title">Dịch Vụ N6</h3>
+          <ul class="footer-links">
+            <li><a href="datve.html">Đặt vé xem phim online</a></li>
+            <li><a href="#">Đặt xe đưa đón tận rạp</a></li>
+            <li><a href="#">Cho thuê phòng chiếu du lịch</a></li>
+            <li><a href="#">Thẻ thành viên N6 VIP</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3 class="footer-title">Chăm Sóc Khách Hàng</h3>
+          <ul class="footer-contact">
+            <li><i class="fas fa-phone-alt icon"></i> Hotline: 0392779766</li>
+            <li><i class="fas fa-envelope icon"></i> Email: 24004157@st.vlute.edu.vn</li>
+            <li><i class="fas fa-map-marker-alt icon"></i> Đ/C: Số 73, Nguyễn Huệ, phường Long Châu, tỉnh Vĩnh Long</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 N6 CINEMA & Transport Services. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- JAVASCRIPT XỬ LÝ LỌC & SAO CHÉP MÃ -->
+    <script>
+        function filterPromo(category) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.promo-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function copyCode(elementId) {
+            const codeText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                alert('Đã sao chép mã giảm giá: ' + codeText + '\nHãy dán mã này tại bước thanh toán ở trang Đặt Vé!');
+            });
+        }
+    </script>
+</body>
+</html>
+
+```

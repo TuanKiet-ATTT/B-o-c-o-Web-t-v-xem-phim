@@ -1,206 +1,466 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=3, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - N6 CINEMA</title>
     <link rel="stylesheet" href="main.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00bcd4;
+            --primary-dark: #008ba3;
+            --bg-dark: #0b0f17;
+            --card-bg: #151d2a;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HR VÀ LOGO CANH GIỮA */
+        .duong-ngan-cach {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 0;
+        }
+
+        .box-logo {
+            text-align: center;
+            padding: 15px 0;
+            background-color: var(--bg-dark);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i, .logo span {
+            color: var(--primary);
+        }
+
+        /* MENU ĐIỀU HƯỚNG ĐỒNG BỘ */
+        .gachduoiLink {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .gachduoiLink a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .gachduoiLink a:hover, .gachduoiLink a.active {
+            color: var(--primary);
+        }
+
+        .khungNoisong {
+            background-color: #1e293b;
+            color: #fff;
+            border: 1px solid var(--primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* HERO BANNER */
+        .hero-banner {
+            background: linear-gradient(rgba(11, 15, 23, 0.6), rgba(11, 15, 23, 0.95)), 
+                        url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .hero-banner h1 {
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .hero-banner p {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 650px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+
+        .btn-main {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: #000;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-main:hover {
+            background: #00d2d3;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* CONTAINER GRID PHIM */
+        .container {
+            max-width: 1250px;
+            margin: 40px auto;
+            padding: 0 20px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title span {
+            color: var(--primary);
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        /* CARD PHIM & HIỆU ỨNG HOVER NÚT ĐẶT VÉ */
+        .movie-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 188, 212, 0.25);
+        }
+
+        .movie-poster {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            overflow: hidden;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        /* LỚP PHỦ TỐI & NÚT ĐẶT VÉ KHI HOVER */
+        .overlay-book {
+            position: absolute;
+            inset: 0;
+            background: rgba(11, 15, 23, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-hover-book {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: #000;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 6px;
+            transform: translateY(15px);
+            transition: transform 0.3s ease, background 0.2s;
+            box-shadow: 0 0 12px rgba(0, 188, 212, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* KHI RÊ CHUỘT VÀO THẺ PHIM */
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.08);
+            filter: brightness(0.7);
+        }
+
+        .movie-card:hover .overlay-book {
+            opacity: 1;
+        }
+
+        .movie-card:hover .btn-hover-book {
+            transform: translateY(0);
+        }
+
+        .movie-title-box {
+            padding: 12px;
+            background: #1e293b;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .movie-title-box h4 {
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        /* FOOTER ĐỒNG BỘ */
+        footer {
+            background-color: #080c14;
+            border-top: 1px solid var(--border-color);
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-col h3 {
+            color: var(--primary);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .footer-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-contact li {
+            list-style: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-bottom {
+            background: #05080e;
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .gachduoiLink { gap: 12px; }
+            .hero-banner h1 { font-size: 26px; }
+            .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .movie-poster { height: 210px; }
+        }
+    </style>
 </head>
 <body>
 
-<hr class="duong-ngan-cach">
-<a href="trangchu.html" id="tenrap" class="canhgiua">N6 CINEMA</a>
-<hr class="duong-ngan-cach">
-<div class="gachduoiLink canhgiua">  
-    <a href="rap.html">RẠP CHIẾU PHIM</a>
-    <a href="lichchieu.html">LỊCH CHIẾU</a>
-    <a href="datve.html">MUA VÉ</a>
-    <a href="khuyenmai.html">KHUYẾN MÃI</a>
-    <a href="lichsudatve.html">LỊCH SỬ ĐẶT VÉ</a>
-    <select name="noisong" id="noisong" class="khungNoisong canhgiua" >
-        <optgroup label="Miền Nam">
-            <option value="ct">Cần Thơ</option>
-            <option value="vl">Vĩnh Long</option>
-        </optgroup>
-        <optgroup label="Miền Bắc"></optgroup>
-        <optgroup label="Miền Trung"></optgroup>
-    </select>    
+    <!-- LOGO N6 CINEMA CANH GIỮA -->
+    <hr class="duong-ngan-cach">
+    <div class="box-logo">
+        <a href="trangchu.html" class="logo">
+            <i class="fas fa-film"></i> N6 <span>CINEMA</span>
+        </a>
+    </div>
+    <hr class="duong-ngan-cach">
+
+    <!-- MENU ĐIỀU HƯỚNG -->
+    <div class="gachduoiLink">  
+        <a href="lichchieu.html">LỊCH CHIẾU</a>
+        <a href="datve.html">MUA VÉ</a>
+        <a href="khuyenmai.html">KHUYẾN MÃI</a>
+        <a href="lichsudatve.html">LỊCH SỬ ĐẶT VÉ</a> 
         <a href="dangnhap.html">ĐĂNG NHẬP</a>
         <a href="dangky.html">ĐĂNG KÝ</a>
-</div>
-<div class="khung-banner">
-  
-    <img src="banner-phim.png" alt="Banner" class="banner-img">
-    
-  
-    <div class="banner-nut">
-        <a href="datve.html" class="nut-datve" >ĐẶT VÉ NGAY</a>
-        <a href="thongtinphim.html" class="nut-thongtin" >XEM TRAILER</a>
     </div>
 
-
-    <button class="mui-ten trai">&#10094;</button> 
-    <button class="mui-ten phai">&#10095;</button>
-</div>
-
-<div class="tieu-de-phan">
-        <h2>PHIM ĐANG CHIẾU</h2>
-    </div>
-<div class="danh-sach-phim">
-        
-        <!-- Phim 1 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80" alt="Poster Phim">
-                <!-- Lớp phủ chứa nút đặt vé & trailer (hiện lên khi hover) -->
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Trại Buôn Người</p>
-        </div>
-
-        <!-- Phim 2 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80" alt="Poster Phim">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Út Lan 2</p>
-        </div>
-
-        <!-- Phim 3 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80" alt="Poster Phim">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Avengers: Hồi Kết</p>
-        </div>
-
-        <!-- Phim 4 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=500&q=80" alt="Poster Phim">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Scotty Giải Cứu</p>
-        </div>
-        <!-- Phim 5 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=500&q=80" alt="Poster Phim">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Trái Tim Quả Thù</p>
-        </div>
-        <!-- Phim 6 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=500&q=80" alt="Poster Phim">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Khóa Chặt Cửa</p>
-        </div>
-
+    <!-- HERO BANNER -->
+    <div class="hero-banner">
+        <h1>TRẢI NGHIỆM ĐIỆN ẢNH ĐỈNH CAO TẠI N6 CINEMA</h1>
+        <p>Thưởng thức các siêu phẩm điện ảnh chiếu rạp mới nhất với công nghệ âm thanh vòm Dolby Atmos và màn hình cong 4K sắc nét.</p>
+        <a href="datve.html" class="btn-main"><i class="fas fa-ticket-alt"></i> ĐẶT VÉ NGAY</a>
     </div>
 
-    <!-- Hang phim thu 2 -->
-<br>
-<br>
-    <div class="danh-sach-phim">
-        
-        <!-- Phim 1 của hàng 2 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80" alt="Poster">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Siêu Anh Hùng X</p>
+    <!-- DANH SÁCH 24 BỘ PHIM -->
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fas fa-fire" style="color: #e11d48;"></i> PHIM <span>ĐANG CHIẾU</span></h2>
         </div>
 
-        <!-- Phim 2 của hàng 2 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&w=500&q=80" alt="Poster">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Đại Chiến Vũ Trụ</p>
+        <div class="movie-grid" id="homeMovieGrid">
+            <!-- Render tự động 24 phim kèm nút Đặt Vé khi Hover -->
         </div>
-
-        <!-- Phim 3 của hàng 2 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=500&q=80" alt="Poster">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Bí Mật Đêm Khuya</p>
-        </div>
-
-        <!-- Phim 4 của hàng 2 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80" alt="Poster">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Cuộc Đua Tốc Độ</p>
-        </div>
-
-        <!-- Phim 5 của hàng 2 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80" alt="Poster">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Truy Tìm Kho Báu</p>
-        </div>
-
-        <!-- Phim 6 của hàng 2 -->
-        <div class="card-phim">
-            <div class="poster-wrap">
-                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=500&q=80" alt="Poster">
-                <div class="overlay-nut">
-                    <a href="datve.html" class="btn-nho btn-dat">ĐẶT VÉ</a>
-                    <a href="thongtinphim.html" class="btn-nho btn-xem">TRAILER</a>
-                </div>
-            </div>
-            <p class="ten-phim">Hành Trình Mới</p>
-        </div>
-
     </div>
 
+    <!-- FOOTER ĐỒNG BỘ -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3 class="logo-text">N6 CINEMA</h3>
+          <p class="footer-desc">
+            Hệ thống rạp chiếu phim hiện đại kết hợp dịch vụ xe trung chuyển hành khách hàng đầu. Mang lại trải nghiệm giải trí hoàn hảo.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h3>Quy Định & Điều Khoản</h3>
+          <ul class="footer-links">
+            <li><a href="#">Quy định chung</a></li>
+            <li><a href="#">Điều khoản giao dịch</a></li>
+            <li><a href="#">Chính sách thanh toán</a></li>
+            <li><a href="#">Chính sách bảo mật</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Dịch Vụ N6</h3>
+          <ul class="footer-links">
+            <li><a href="datve.html">Đặt vé xem phim online</a></li>
+            <li><a href="#">Thẻ thành viên N6 VIP</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Chăm Sóc Khách Hàng</h3>
+          <ul class="footer-contact">
+            <li><i class="fas fa-phone-alt" style="color: var(--primary);"></i> Hotline: 0392779766</li>
+            <li><i class="fas fa-envelope" style="color: var(--primary);"></i> Email: 24004157@st.vlute.edu.vn</li>
+            <li><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Đ/C: Số 73, Nguyễn Huệ, P. Long Châu, Vĩnh Long</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 N6 CINEMA & Transport Services. All rights reserved.</p>
+      </div>
+    </footer>
 
+    <!-- JAVASCRIPT RENDER PHIM KÈM OVERLAY HOVER -->
+    <script>
+        const allMovies = [
+            { id: 1, title: 'Trại Buôn Người', poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80' },
+            { id: 2, title: 'Út Lan 2', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80' },
+            { id: 3, title: 'Avengers: Hồi Kết', poster: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80' },
+            { id: 4, title: 'Scotty Giải Cứu', poster: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=500&q=80' },
+            { id: 5, title: 'Trái Tim Quả Thù', poster: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=500&q=80' },
+            { id: 6, title: 'Khóa Chặt Cửa', poster: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=500&q=80' },
+            { id: 7, title: 'Siêu Anh Hùng X', poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80' },
+            { id: 8, title: 'Đại Chiến Vũ Trụ', poster: 'https://images.unsplash.com/photo-1514539079130-25950c84af65?auto=format&fit=crop&w=500&q=80' },
+            { id: 9, title: 'Bí Mật Đêm Khuya', poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=500&q=80' },
+            { id: 10, title: 'Cuộc Đua Tốc Độ', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80' },
+            { id: 11, title: 'Truy Tìm Kho Báu', poster: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=500&q=80' },
+            { id: 12, title: 'Hành Trình Mới', poster: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=500&q=80' },
+            { id: 13, title: 'Avatar: Dòng Thời Gian', poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=500&q=80' },
+            { id: 14, title: 'Kẻ Cắp Mặt Trăng 4', poster: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=500&q=80' },
+            { id: 15, title: 'Vũ Trụ Bí Ẩn', poster: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=500&q=80' },
+            { id: 16, title: 'Đêm Kinh Hoàng', poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=500&q=80' },
+            { id: 17, title: 'Huyền Thoại Rồng', poster: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=500&q=80' },
+            { id: 18, title: 'Cuộc Chiến Tương Lai', poster: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80' },
+            { id: 19, title: 'Ma Trận Thực Tại', poster: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=500&q=80' },
+            { id: 20, title: 'Siêu Tốc Độ', poster: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=500&q=80' },
+            { id: 21, title: 'Đại Dương Cổ Đại', poster: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=500&q=80' },
+            { id: 22, title: 'Thành Phố Lên Đèn', poster: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=500&q=80' },
+            { id: 23, title: 'Bí Mật Rừng Tối', poster: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=500&q=80' },
+            { id: 24, title: 'Nhịp Điệu Âm Nhạc', poster: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=500&q=80' }
+        ];
 
+        function renderHomeMovies() {
+            const grid = document.getElementById('homeMovieGrid');
+            grid.innerHTML = allMovies.map(m => `
+                <a href="datve.html?movie=${m.id}" class="movie-card">
+                    <div class="movie-poster">
+                        <img src="${m.poster}" alt="${m.title}">
+                        <div class="overlay-book">
+                            <span class="btn-hover-book"><i class="fas fa-ticket-alt"></i> ĐẶT VÉ</span>
+                        </div>
+                    </div>
+                    <div class="movie-title-box">
+                        <h4>${m.title}</h4>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        renderHomeMovies();
+    </script>
 </body>
 </html>
